@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     content: {
         justifyContent: 'center',
         padding: 20,
-        backgroundColor: '#fff',
         borderRadius: 5,
         width: '80%',
         gap: 10,
@@ -118,17 +117,18 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 15,
         paddingLeft: 10,
+        backgroundColor: 'white'
     },
     button: {
         backgroundColor: '#a18cd1',
         padding: 15,
-        borderRadius: 5,
+        borderRadius: 25,
         alignItems: 'center',
     },
     buttonApple: {
         backgroundColor: 'darkgray',
         padding: 15,
-        borderRadius: 5,
+        borderRadius: 25,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
