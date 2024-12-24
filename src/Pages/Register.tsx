@@ -1,28 +1,36 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../Components/Colors';
-import { Roboto_400Regular, useFonts } from '@expo-google-fonts/roboto';
+import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
+import DismissKeyboard from '../Components/DismissKeyboard';
+
 
 export default function Register() {
 
     let [fontsLoaded] = useFonts({
-        Roboto_400Regular,
+        Roboto_700Bold,
       });
     
       if (!fontsLoaded) {
         return null;
       }
 
-      
   return (
+    <DismissKeyboard>
     <LinearGradient
         colors={[Colors.Gradient1, Colors.Gradient2]}
         style={styles.container}
     >
     <View style={styles.container}>
-      <Text style={styles.text}>Inscription</Text>
+      <Text style={styles.title}>Inscription</Text>
+        <View style={styles.input}>
+            <TextInput>
+                <Text>Nom de Famille</Text>
+            </TextInput>
+        </View>
     </View>
     </LinearGradient>
+    </DismissKeyboard>
   );
 }
 
@@ -32,9 +40,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  text: {
+  title: {
     fontSize: 20,
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: 'Roboto_700Bold',
     color: '#000',
   },
+  input: {
+    alignItems: 'center',
+    marginBottom: 50
+  }
 });
