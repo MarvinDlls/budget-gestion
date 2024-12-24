@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Register from './src/Pages/Register';
+import Register from './src/Screens/Register';
 import Colors from './src/Components/Colors';
 
 const Stack = createStackNavigator();
