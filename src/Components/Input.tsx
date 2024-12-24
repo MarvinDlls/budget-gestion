@@ -12,9 +12,27 @@ export default function Input() {
 
     const handleRegister = async () => {
         if (!pseudo || !email || !password || !confirmPassword) {
-            Alert.alert('Erreur', 'Tous les champs doivent être remplis.');
+            Alert.alert('Attention!', 'Tous les champs doivent être remplis.');
             return;
         }
+
+        const pseudoRegex = /^[a-zA-Z0-9_-]{3,16}$/;
+    if (!pseudoRegex.test(pseudo)) {
+        Alert.alert('Erreur', 'Le pseudo doit comporter entre 3 et 16 caractères et contenir uniquement des lettres, des chiffres, des tirets ou des underscores.');
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        Alert.alert('Erreur', 'L\'email n\'est pas valide.');
+        return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+        Alert.alert('Erreur', 'Le mot de passe doit comporter au moins 8 caractères, inclure une majuscule, une minuscule, un chiffre et un caractère spécial.');
+        return;
+    }
 
         if (password !== confirmPassword) {
             Alert.alert('Erreur', 'Les mots de passe ne correspondent pas.');
@@ -22,7 +40,7 @@ export default function Input() {
         }
 
         try {
-            const salt = bcrypt.genSaltSync(10); // Génération du sel
+            const salt = bcrypt.genSaltSync(10); 
             const hashedPassword = bcrypt.hashSync(password, salt); 
             const { data, error } = await supabase
                 .from('users')
@@ -63,7 +81,7 @@ export default function Input() {
         <View style={styles.content}>
             <TextInput
                 style={styles.input}
-                placeholder="Pseudonyme"
+                placeholder="Pseudo"
                 value={pseudo}
                 onChangeText={setPseudo}
             />
@@ -108,11 +126,11 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 5,
         width: '80%',
-        gap: 10,
+        gap: 15,
     },
     input: {
         height: 50,
-        borderColor: '#ddd',
+        borderColor: '#d9d9D9',
         borderWidth: 1,
         borderRadius: 5,
         marginBottom: 15,
@@ -126,7 +144,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonApple: {
-        backgroundColor: 'darkgray',
+        backgroundColor: 'white',
         padding: 15,
         borderRadius: 25,
         alignItems: 'center',
