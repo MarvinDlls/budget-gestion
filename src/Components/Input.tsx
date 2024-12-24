@@ -1,7 +1,7 @@
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import { useState } from "react";
 import { supabase } from '../../services/supabase';
-
+import bcrypt from 'react-native-bcrypt';
 const logoApple = require('../../assets/apple.png');
 
 export default function Input() {
@@ -22,9 +22,12 @@ export default function Input() {
         }
 
         try {
+            const salt = bcrypt.genSaltSync(10); // Génération du sel
+            const hashedPassword = bcrypt.hashSync(password, salt); 
             const { data, error } = await supabase
                 .from('users')
-                .insert([{ pseudo, email, password }]);
+                .insert({ pseudo, email, password: hashedPassword });
+
 
             if (error) {
                 Alert.alert('Erreur', error.message);
