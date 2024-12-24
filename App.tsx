@@ -3,13 +3,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Register from './src/Pages/Register';
+import Colors from './src/Components/Colors';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <LinearGradient
-      colors={['#a18cd1', '#fbc2eb']}
+      colors={[Colors.Gradient1, Colors.Gradient2]}
       style={styles.container}
     >
       <NavigationContainer>
