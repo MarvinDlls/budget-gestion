@@ -49,11 +49,12 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontFamily: 'Roboto_700Bold',
     color: '#000',
-    marginBottom: 15
+    top: 5
   },
   logo: {
-    alignSelf: 'flex-start',
-    marginLeft: 25,
-    marginBottom: 55
+    position: 'absolute',
+    top: 50,
+    left: 25,
+    zIndex: 1
   }
 });

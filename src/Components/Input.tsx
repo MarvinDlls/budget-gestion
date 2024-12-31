@@ -2,7 +2,12 @@ import { View, TextInput, Text, StyleSheet, TouchableOpacity, Alert, Image } fro
 import { useState } from "react";
 import { supabase } from '../../services/supabase';
 import bcrypt from 'react-native-bcrypt';
-const logoApple = require('../../assets/apple.png');
+import * as AuthSession from 'expo-auth-session';
+import { makeRedirectUri } from 'expo-auth-session';
+const logoDiscord = require('../../assets/discord.png');
+
+const DISCORD_CLIENT_ID = '1323600935540232233';
+const DISCORD_ENDPOINT = 'https://discord.com/api/v10';
 
 export default function Input() {
     const [pseudo, setPseudo] = useState('');
@@ -61,19 +66,80 @@ export default function Input() {
         }
     };
 
-    const handleAppleLogin = async () => {
-        try {
-            const { data, error } = await supabase.auth.signInWithOAuth({
-                provider: 'apple',
-            });
+    const redirectUri = makeRedirectUri({
+        scheme: 'yourauthapp',
+        path: 'discord-auth'
+    });
 
-            if (error) {
-                alert(`Erreur Apple Auth: ${error.message}`);
-            } else {
-                console.log('Connexion avec Apple réussie', data);
+    const handleDiscordLogin = async () => {
+        try {
+            const authRequestOptions = {
+                responseType: AuthSession.ResponseType.Token,
+                clientId: DISCORD_CLIENT_ID,
+                scopes: ['identify', 'email'],
+                redirectUri
+            };
+
+            const discovery = {
+                authorizationEndpoint: 'https://discord.com/api/oauth2/authorize',
+                tokenEndpoint: 'https://discord.com/api/oauth2/token',
+            };
+
+            const authRequest = new AuthSession.AuthRequest(authRequestOptions);
+            authRequest.url = await authRequest.makeAuthUrlAsync(discovery);
+
+            const result = await authRequest.promptAsync(discovery);
+
+            if (result.type === 'success') {
+                const userResponse = await fetch(`${DISCORD_ENDPOINT}/users/@me`, {
+                    headers: {
+                        'Authorization': `Bearer ${result.authentication?.accessToken}`
+                    }
+                });
+                
+                const discordUser = await userResponse.json();
+
+                // Vérifier si l'utilisateur existe déjà
+                const { data: existingUser } = await supabase
+                    .from('users')
+                    .select()
+                    .eq('email', discordUser.email)
+                    .single();
+
+                if (existingUser) {
+                    // Mise à jour de l'utilisateur existant
+                    const { error: updateError } = await supabase
+                        .from('users')
+                        .update({
+                            discord_id: discordUser.id,
+                            avatar_url: discordUser.avatar 
+                                ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
+                                : null
+                        })
+                        .eq('email', discordUser.email);
+
+                    if (updateError) throw updateError;
+                } else {
+                    // Création d'un nouvel utilisateur
+                    const { error: insertError } = await supabase
+                        .from('users')
+                        .insert({
+                            pseudo: discordUser.username,
+                            email: discordUser.email,
+                            discord_id: discordUser.id,
+                            avatar_url: discordUser.avatar 
+                                ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
+                                : null
+                        });
+
+                    if (insertError) throw insertError;
+                }
+
+                Alert.alert('Succès', 'Connexion avec Discord réussie !');
             }
         } catch (error) {
-            alert('Une erreur est survenue avec la connexion Apple.');
+            Alert.alert('Erreur', 'Un problème est survenu avec l\'authentification Discord.');
+            console.error(error);
         }
     };
 
@@ -112,9 +178,9 @@ export default function Input() {
 
             <Text style={styles.alt}>Ou continuer avec</Text>
 
-            <TouchableOpacity style={styles.buttonApple} onPress={handleAppleLogin}>
-                <Image source={logoApple} style={{ width: 24, height: 24 }} />
-                <Text style={styles.buttonTextApple}>Inscription avec Apple</Text>
+            <TouchableOpacity style={styles.buttonDiscord} onPress={handleDiscordLogin}>
+                <Image source={logoDiscord} style={{ width: 24, height: 24 }} />
+                <Text style={styles.buttonTextDiscord}>Inscription avec Discord</Text>
             </TouchableOpacity>
         </View>
     );
@@ -127,6 +193,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: '80%',
         gap: 15,
+        top: 20
     },
     input: {
         height: 50,
@@ -143,8 +210,8 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         alignItems: 'center',
     },
-    buttonApple: {
-        backgroundColor: 'white',
+    buttonDiscord: {
+        backgroundColor: '#5865F2',
         padding: 15,
         borderRadius: 25,
         alignItems: 'center',
@@ -157,8 +224,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
     },
-    buttonTextApple: {
-        color: '#000',
+    buttonTextDiscord: {
+        color: '#fff',
         fontWeight: 'bold',
         fontSize: 16,
         paddingRight: 20,
