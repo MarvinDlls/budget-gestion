@@ -179,7 +179,7 @@ export default function Input() {
             <Text style={styles.alt}>Ou continuer avec</Text>
 
             <TouchableOpacity style={styles.buttonDiscord} onPress={handleDiscordLogin}>
-                <Image source={logoDiscord} style={{ width: 24, height: 24 }} />
+                <Image source={logoDiscord} style={{ width: 24, height: 24, borderColor: 'white', borderWidth: 2, borderRadius: 50 }} />
                 <Text style={styles.buttonTextDiscord}>Inscription avec Discord</Text>
             </TouchableOpacity>
         </View>

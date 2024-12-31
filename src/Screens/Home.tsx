@@ -2,11 +2,15 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from "../Components/Colors";
 import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
+import { NavigationProp } from '@react-navigation/native';
 
 const registerLogo = require('../../assets/registerLogo.png');
 
+type HomeProps = {
+    navigation: NavigationProp<any>;
+};
 
-function Home() {
+function Home({ navigation }: HomeProps) {
 
     let [fontsLoaded] = useFonts({
         Roboto_700Bold,
@@ -28,7 +32,7 @@ function Home() {
                 <Text style={styles.textInput}>Se Connecter</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonTwo}>
+            <TouchableOpacity style={styles.buttonTwo} onPress={() => navigation.navigate('Register')}>
                 <Text style={styles.textInput}>S'inscrire</Text>
                 <Image source={registerLogo} style={{width: 24, height: 24}} />
             </TouchableOpacity>
