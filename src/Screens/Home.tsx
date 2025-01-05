@@ -5,6 +5,7 @@ import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
 import { NavigationProp } from '@react-navigation/native';
 
 const registerLogo = require('../../assets/registerLogo.png');
+const logoApp = require('../../assets/logoApp.png');
 
 type HomeProps = {
     navigation: NavigationProp<any>;
@@ -23,21 +24,23 @@ function Home({ navigation }: HomeProps) {
     return(
         <LinearGradient
             colors={[Colors.Gradient1, Colors.Gradient2]}
-            style={styles.container}
+            style={styles.main}
         >
-        <View style={styles.container}>
+        <View style={styles.content}>
+            <Text style={styles.title}>Bienvenue sur</Text>
+            <Image source={logoApp} style={styles.logo}/>
+            <View style={styles.main}>
+                <View style={styles.button}>
+                    <TouchableOpacity style={styles.buttonOne}>
+                        <Text style={styles.textInput}>Se Connecter</Text>
+                    </TouchableOpacity>
 
-        <View style={styles.button}>
-            <TouchableOpacity style={styles.buttonOne}>
-                <Text style={styles.textInput}>Se Connecter</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.buttonTwo} onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.textInput}>S'inscrire</Text>
-                <Image source={registerLogo} style={{width: 24, height: 24}} />
-            </TouchableOpacity>
-        </View>
-
+                    <TouchableOpacity style={styles.buttonTwo} onPress={() => navigation.navigate('Register')}>
+                        <Text style={styles.textInput}>S'inscrire</Text>
+                        <Image source={registerLogo} style={{width: 24, height: 24}} />
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
 
         </LinearGradient>
@@ -45,11 +48,27 @@ function Home({ navigation }: HomeProps) {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    main: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-end',
         width: '100%'
+    },
+    content: {
+        alignItems: 'center',
+    },
+    title:{
+        top: 200,
+        fontSize: 25,
+        fontFamily: 'Roboto_700Bold',
+        // transform: [{rotate: "-25deg"}]
+    },
+    logo: {
+        width: 200,
+        height: 200,
+        top: 325,
+        borderWidth: 4,
+        borderRadius: 100
     },
     button: {
         flexDirection: 'row',
