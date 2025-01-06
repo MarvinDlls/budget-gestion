@@ -31,7 +31,7 @@ export default function Register({navigation}: RegisterProps) {
       >
         
       <View style={styles.container}>
-        <TouchableOpacity style={styles.logo} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.logo} onPress={() => navigation.goBack()}>
           <Image source={Back} style={{width: 35, height: 35}} />
         </TouchableOpacity>
         <Text style={styles.title}>Inscription</Text>
