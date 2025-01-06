@@ -5,6 +5,7 @@ import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
 import { NavigationProp } from '@react-navigation/native';
 
 const registerLogo = require('../../assets/registerLogo.png');
+const loginLogo = require('../../assets/loginLogo.png');
 const logoApp = require('../../assets/logoApp.png');
 
 type HomeProps = {
@@ -33,6 +34,7 @@ function Home({ navigation }: HomeProps) {
                 <View style={styles.button}>
                     <TouchableOpacity style={styles.buttonOne}>
                         <Text style={styles.textInput}>Se Connecter</Text>
+                        <Image source={loginLogo} style={{width: 24, height: 24}} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.buttonTwo} onPress={() => navigation.navigate('Register')}>
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title:{
-        top: 200,
+        top: 150,
         fontSize: 25,
         fontFamily: 'Roboto_700Bold',
         // transform: [{rotate: "-25deg"}]
@@ -66,9 +68,9 @@ const styles = StyleSheet.create({
     logo: {
         width: 200,
         height: 200,
-        top: 325,
+        top: 250,
         borderWidth: 4,
-        borderRadius: 100
+        borderRadius: 100,
     },
     button: {
         flexDirection: 'row',
@@ -86,7 +88,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'row-reverse'
     },
     buttonTwo: {
         height: 50,
