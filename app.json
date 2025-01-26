@@ -7,13 +7,15 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "scheme": "yourauthapp",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -23,6 +25,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "expo": {
+    "platforms": ["ios", "android", "web"],
+    "extra": {
+      "supabaseUrl": "https://nesveyhcxbgdhlndfbaz.supabase.co",
+      "supabaseKey": "your-anon-key"
     }
+  },
+    "plugins": ["expo-apple-authentication"]
   }
 }
