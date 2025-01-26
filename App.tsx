@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Register from './src/Pages/Register';
 import Colors from './src/Components/Colors';
+import Welcome from './src/Pages/Welcome';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
           }}
         >
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name='Welcome' component={Welcome} />
         </Stack.Navigator>
       </NavigationContainer>
     </LinearGradient>
