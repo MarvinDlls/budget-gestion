@@ -1,8 +1,6 @@
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import { useState } from "react";
 import { supabase } from '../../services/supabase';
-import bcrypt from 'react-native-bcrypt';
-
 
 export default function Input() {
 
