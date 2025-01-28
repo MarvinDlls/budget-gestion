@@ -5,8 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Register from './src/Screens/Register';
 import Home from './src/Screens/Home';
+import Welcome from './src/Screens/Welcome';
 import Colors from './src/Components/Colors';
-import Welcome from './src/Pages/Welcome';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +18,7 @@ export default function App() {
     >
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName='Home'
+          initialRouteName='Welcome'
           screenOptions={{
             headerShown: false,
           }}
