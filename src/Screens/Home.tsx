@@ -32,7 +32,7 @@ function Home({ navigation }: HomeProps) {
             <Image source={logoApp} style={styles.logo}/>
             <View style={styles.main}>
                 <View style={styles.button}>
-                    <TouchableOpacity style={styles.buttonOne}>
+                    <TouchableOpacity style={styles.buttonOne} onPress={() => navigation.navigate('Login')}>
                         <Text style={styles.textInput}>Se Connecter</Text>
                         <Image source={loginLogo} style={{width: 24, height: 24}} />
                     </TouchableOpacity>
