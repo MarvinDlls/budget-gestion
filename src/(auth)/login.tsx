@@ -1,18 +1,63 @@
-import { View, Text, Button } from "react-native";
-import { useRouter } from "expo-router";
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { NavigationProp } from "@react-navigation/native";
+import DismissKeyboard from "../Components/DismissKeyboard";
+import { LinearGradient } from "expo-linear-gradient";
+import LoginForm from "../Components/LoginForm";
+import Colors from '../Components/Colors';
+import { Roboto_700Bold, useFonts } from "@expo-google-fonts/roboto";
 
-export default function LoginScreen() {
-  const router = useRouter();
+const Back = require('../../assets/back.png');
 
-  const handleLogin = () => {
-    // Simuler une connexion et rediriger vers la bottom bar
-    router.replace("/(tabs)");
-  };
+type LoginProps = {
+  navigation: NavigationProp<any>;
+};
+
+export default function Login({ navigation }: LoginProps) {
+  
+  let [fontsLoaded] = useFonts({
+    Roboto_700Bold,
+  });
+  
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Page de Connexion</Text>
-      <Button title="Se connecter" onPress={handleLogin} />
-    </View>
+    <DismissKeyboard>
+      <LinearGradient
+        colors={[Colors.Gradient1, Colors.Gradient2]}
+        style={styles.container}
+      >
+        <View style={styles.container}>
+          {/* Remplace goBack par navigate pour rediriger vers HomeScreen */}
+          <TouchableOpacity style={styles.logo} onPress={() => navigation.navigate('Home')}>
+            <Image source={Back} style={{ width: 35, height: 35 }} />
+          </TouchableOpacity>
+          <Text style={styles.title}>Connexion</Text>
+          <LoginForm />
+        </View>
+      </LinearGradient>
+    </DismissKeyboard>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  title: {
+    fontSize: 40,
+    fontFamily: 'Roboto_700Bold',
+    color: '#000',
+    top: 5
+  },
+  logo: {
+    position: 'absolute',
+    top: 50,
+    left: 25,
+    zIndex: 1
+  }
+});
