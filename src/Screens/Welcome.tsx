@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from "react-native";
-import Layout from "../Components/layout";
 
 export default function Welcome () {
     return(
