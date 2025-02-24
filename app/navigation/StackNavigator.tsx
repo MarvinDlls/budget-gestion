@@ -20,7 +20,7 @@ export default function StackNavigator() {
       if (data.session) {
         navigation.navigate("HomeScreen"); // Redirige vers l'écran Home si l'utilisateur est connecté
       } else {
-        navigation.navigate("Login"); // Redirige vers l'écran Login si l'utilisateur n'est pas connecté
+        navigation.navigate("Home"); // Redirige vers l'écran Login si l'utilisateur n'est pas connecté
       }
     };
     checkSession();
