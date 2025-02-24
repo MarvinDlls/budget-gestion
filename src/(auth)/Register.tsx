@@ -3,12 +3,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../Components/Colors';
 import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
 import DismissKeyboard from '../Components/DismissKeyboard';
-import Input from '../Components/Input';
+import { NavigationProp } from '@react-navigation/native';
+import RegisterForm from '../Components/RegisterForm';
 
 const Back = require('../../assets/back.png');
 
+type RegisterProps = {
+  navigation: NavigationProp<any>;
+};
 
-export default function Register() {
+
+export default function Register({navigation}: RegisterProps) {
 
     let [fontsLoaded] = useFonts({
         Roboto_700Bold,
@@ -26,11 +31,11 @@ export default function Register() {
       >
         
       <View style={styles.container}>
-        <TouchableOpacity style={styles.logo}>
+        <TouchableOpacity style={styles.logo} onPress={() => navigation.goBack()}>
           <Image source={Back} style={{width: 35, height: 35}} />
         </TouchableOpacity>
         <Text style={styles.title}>Inscription</Text>
-        <Input />
+        <RegisterForm />
       </View>    
       </LinearGradient>
     </DismissKeyboard>
