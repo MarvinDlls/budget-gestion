@@ -1,7 +1,9 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
-import { useRouter, useSegments } from "expo-router";
 import { supabase } from "../services/supabase";
+import { LinearGradient } from 'expo-linear-gradient';
+import Colors from "../src/Components/Colors";
+import { StyleSheet, View } from "react-native";
 
 // Fonction pour vérifier l'authentification
 function useProtectedRoute() {
@@ -9,30 +11,42 @@ function useProtectedRoute() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!segments || !router) return; // Vérification pour éviter l'erreur
+
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       const isAuthGroup = segments[0] === "(auth)";
       
       if (!data.session && !isAuthGroup) {
-        // Rediriger vers login si pas de session et pas dans le groupe auth
         router.replace("/(auth)/Login");
       } else if (data.session && isAuthGroup) {
-        // Rediriger vers tabs si session active et dans groupe auth
         router.replace("/(tabs)");
       }
     };
-    
+
     checkSession();
-  }, [segments]);
+  }, [segments, router]);
 }
 
 export default function RootLayout() {
   useProtectedRoute();
-  
+
   return (
-    <Stack>
+    <LinearGradient
+      colors={[Colors.Gradient1, Colors.Gradient2]}
+      style={styles.container}
+    >
+      <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/Login" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/Register" options={{ headerShown: false }} />
     </Stack>
+    </LinearGradient>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
