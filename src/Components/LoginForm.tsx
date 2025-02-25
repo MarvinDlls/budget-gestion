@@ -7,7 +7,7 @@ export default function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation(); // Initialisation de la navigation
-
+    
     const handleLogin = async () => {
         if (!email || !password) {
             Alert.alert('Attention!', 'Tous les champs doivent être remplis.');
