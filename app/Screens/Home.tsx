@@ -1,6 +1,7 @@
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import Colors from "../Components/Colors";
+import Colors from "../../src/Components/Colors";
 import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
 import { NavigationProp } from '@react-navigation/native';
 

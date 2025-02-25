@@ -1,9 +1,10 @@
+import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import DismissKeyboard from "../Components/DismissKeyboard";
+import DismissKeyboard from "../../src/Components/DismissKeyboard";
 import { LinearGradient } from "expo-linear-gradient";
-import LoginForm from "../Components/LoginForm";
-import Colors from '../Components/Colors';
+import LoginForm from "../../src/Components/LoginForm";
+import Colors from '../../src/Components/Colors';
 import { Roboto_700Bold, useFonts } from "@expo-google-fonts/roboto";
 
 const Back = require('../../assets/back.png');
@@ -29,7 +30,6 @@ export default function Login({ navigation }: LoginProps) {
         style={styles.container}
       >
         <View style={styles.container}>
-          {/* Remplace goBack par navigate pour rediriger vers HomeScreen */}
           <TouchableOpacity style={styles.logo} onPress={() => navigation.navigate('Home')}>
             <Image source={Back} style={{ width: 35, height: 35 }} />
           </TouchableOpacity>

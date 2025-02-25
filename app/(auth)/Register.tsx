@@ -1,10 +1,11 @@
+import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Colors from '../Components/Colors';
+import Colors from '../../src/Components/Colors';
 import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
-import DismissKeyboard from '../Components/DismissKeyboard';
+import DismissKeyboard from '../../src/Components/DismissKeyboard';
 import { NavigationProp } from '@react-navigation/native';
-import RegisterForm from '../Components/RegisterForm';
+import RegisterForm from '../../src/Components/RegisterForm';
 
 const Back = require('../../assets/back.png');
 
