@@ -3,19 +3,20 @@ import { useEffect } from "react";
 import { supabase } from "../services/supabase";
 import { StyleSheet, View } from "react-native";
 
-// Fonction pour vérifier l'authentification
 function useProtectedRoute() {
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
-    if (!segments || !router) return; // Vérification pour éviter l'erreur
+    if (!segments || !router) return;
 
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       const isAuthGroup = segments[0] === "(auth)";
-
-      if (!data.session && !isAuthGroup) {
+      const isHomePage = segments[0] === "Home"; // Ajouter cette ligne
+      
+      // Modifier cette condition pour ne pas rediriger vers Login si on est sur Home
+      if (!data.session && !isAuthGroup && !isHomePage) {
         router.replace("/(auth)/Login");
       } else if (data.session && isAuthGroup) {
         router.replace("/(tabs)");
@@ -31,10 +32,10 @@ export default function RootLayout() {
 
   return (
     <Stack>
+      <Stack.Screen name="Home" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/Login" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/Register" options={{ headerShown: false }} />
-      <Stack.Screen name="Home" options={{ headerShown: false }} />
     </Stack>
   );
 }
