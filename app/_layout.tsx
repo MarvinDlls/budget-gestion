@@ -1,8 +1,6 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { supabase } from "../services/supabase";
-import { LinearGradient } from "expo-linear-gradient";
-import Colors from "../src/Components/Colors";
 import { StyleSheet, View } from "react-native";
 
 // Fonction pour vérifier l'authentification
@@ -33,9 +31,10 @@ export default function RootLayout() {
 
   return (
     <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/Login" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/Register" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/Login" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/Register" options={{ headerShown: false }} />
+      <Stack.Screen name="Home" options={{ headerShown: false }} />
     </Stack>
   );
 }
