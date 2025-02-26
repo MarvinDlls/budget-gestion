@@ -1,19 +1,17 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { NavigationProp } from "@react-navigation/native";
+import { useRouter } from "expo-router"; // Importer useRouter
 import DismissKeyboard from "../../src/Components/DismissKeyboard";
 import { LinearGradient } from "expo-linear-gradient";
-import LoginForm from "../../src/Components/LoginForm";
 import Colors from "../../src/Components/Colors";
 import { Roboto_700Bold, useFonts } from "@expo-google-fonts/roboto";
+import LoginForm from '../../src/Components/LoginForm';
 
 const Back = require("../../assets/back.png");
 
-type LoginProps = {
-  navigation: NavigationProp<any>;
-};
-
-export default function Login({ navigation }: LoginProps) {
+export default function Login() {
+  const router = useRouter(); // Utilisez useRouter au lieu de recevoir navigation comme prop
+  
   let [fontsLoaded] = useFonts({
     Roboto_700Bold,
   });
@@ -31,7 +29,7 @@ export default function Login({ navigation }: LoginProps) {
         <View style={styles.container}>
           <TouchableOpacity
             style={styles.logo}
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => router.navigate("/Home")}
           >
             <Image source={Back} style={{ width: 35, height: 35 }} />
           </TouchableOpacity>
