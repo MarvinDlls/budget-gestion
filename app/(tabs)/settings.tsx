@@ -1,13 +1,13 @@
 import { View, Text, Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router"; // Remplacé useNavigation par useRouter
 import { supabase } from '../../services/supabase';
 
 export default function SettingsScreen() {
-  const navigation = useNavigation();
+  const router = useRouter(); // Utilisation de useRouter au lieu de useNavigation
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigation.navigate("Home");
+    router.navigate("/src/Screens/Home"); // Ajustez le chemin selon l'emplacement réel
   };
 
   return (
