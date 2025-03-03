@@ -27,11 +27,8 @@ export default function Login() {
         style={styles.container}
       >
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.logo}
-            onPress={() => router.navigate("/Home")}
-          >
-            <Image source={Back} style={{ width: 35, height: 35 }} />
+          <TouchableOpacity style={styles.logo} onPress={() => router.back()}>
+            <Image source={Back} style={{width: 35, height: 35}} />
           </TouchableOpacity>
           <Text style={styles.title}>Connexion</Text>
           <LoginForm />

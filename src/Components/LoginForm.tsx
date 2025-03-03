@@ -26,7 +26,7 @@ export default function LoginForm() {
             }
 
             // Redirige vers IndexScreen après une connexion réussie
-            router.navigate('../(tabs)/index'); // Ajustez le chemin selon votre structure de fichiers
+            router.navigate("/(tabs)/"); // Ajustez le chemin selon votre structure de fichiers
     
         } catch (error) {
             Alert.alert('Erreur', 'Un problème est survenu, veuillez réessayer.');
