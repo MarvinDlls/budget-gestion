@@ -7,7 +7,7 @@ export default function SettingsScreen() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.navigate("/src/Screens/Home"); // Ajustez le chemin selon l'emplacement réel
+    router.navigate("/Home"); // Ajustez le chemin selon l'emplacement réel
   };
 
   return (
