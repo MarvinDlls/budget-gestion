@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs, useRouter } from 'expo-router';
+import { supabase } from '../services/supabase';
 
-// Composant de menu latéral
 interface SideMenuProps {
   visible: boolean;
   onClose: () => void;
@@ -13,6 +13,11 @@ interface SideMenuProps {
 export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMenuProps) {
   const router = useRouter();
   const [animation] = useState(new Animated.Value(-300));
+
+  const handleLogout = async () => {
+      await supabase.auth.signOut();
+      router.navigate("/Home");
+    };
   
   React.useEffect(() => {
     Animated.timing(animation, {
@@ -84,7 +89,7 @@ export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMen
               ))}
             </View>
             
-            <TouchableOpacity style={styles.logoutButton}>
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
               <Ionicons name="log-out" size={24} color="#FFF" />
               <Text style={styles.logoutText}>Déconnexion</Text>
             </TouchableOpacity>
