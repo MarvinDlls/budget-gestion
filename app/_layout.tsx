@@ -13,11 +13,10 @@ function useProtectedRoute() {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       const isAuthGroup = segments[0] === "(auth)";
-      const isHomePage = segments[0] === "Home"; // Ajouter cette ligne
+      const isHomePage = segments[0] === "Home"; 
       
-      // Modifier cette condition pour ne pas rediriger vers Login si on est sur Home
       if (!data.session && !isAuthGroup && !isHomePage) {
-        router.replace("/(auth)/Login");
+        router.replace("/Home");
       } else if (data.session && isAuthGroup) {
         router.replace("/(tabs)");
       }
