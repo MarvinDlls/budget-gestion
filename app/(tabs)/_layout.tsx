@@ -3,7 +3,7 @@ import { Tabs } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router'; 
-import SideMenu from '../SideMenu';
+import SideMenu from '../modal/SideMenu';
 
 export default function TabsLayout() {
   const [menuVisible, setMenuVisible] = useState(false);
