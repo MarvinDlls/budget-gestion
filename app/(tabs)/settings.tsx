@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { supabase } from '../../services/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import ThemeModal from "../modal/ModalPref/Theme";
 
 export default function SettingsScreen() {
   const router = useRouter();
+  const [visible, setVisible] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -12,7 +15,7 @@ export default function SettingsScreen() {
   };
 
   type IconName = "person-circle-outline" | "options-outline" | "wallet-outline" | "shield-checkmark-outline";
-  
+
   const settingsSections: { title: string; icon: IconName; onPress: () => void }[] = [
     {
       title: "Compte",
@@ -22,7 +25,7 @@ export default function SettingsScreen() {
     {
       title: "Préférences de l'application",
       icon: "options-outline",
-      onPress: () => router.navigate("/settings/preferences")
+      onPress: () => setVisible(true) // Ouvre la modal du thème
     },
     {
       title: "Gestion du budget",
@@ -55,6 +58,9 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         ))}
       </View>
+
+      {/* Modal pour le thème (visible seulement quand on appuie sur "Préférences de l'application") */}
+      <ThemeModal visible={visible} setVisible={setVisible} />
 
       <View style={styles.footerContainer}>
         <TouchableOpacity 
