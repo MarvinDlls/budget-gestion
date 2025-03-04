@@ -2,6 +2,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { supabase } from "../services/supabase";
 import { StyleSheet, View } from "react-native";
+import { PaperProvider } from "react-native-paper";
 
 function useProtectedRoute() {
   const segments = useSegments();
@@ -30,12 +31,14 @@ export default function RootLayout() {
   useProtectedRoute();
 
   return (
+    <PaperProvider>
     <Stack>
       <Stack.Screen name="Home" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/Login" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/Register" options={{ headerShown: false }} />
     </Stack>
+    </PaperProvider>
   );
 }
 
