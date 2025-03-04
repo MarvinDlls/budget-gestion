@@ -37,11 +37,11 @@ export default function TabsLayout() {
             title: "Accueil",
             headerLeft: () => (
               <TouchableOpacity onPress={openMenu} style={{ marginLeft: 15 }}>
-                <Ionicons name="menu" size={24} color="black" />
+                <Ionicons name="menu" size={32} color="black" />
               </TouchableOpacity>
             ),
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" size={size} color={color} />
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="home" size={32} color={color} />
             ),
           }}
         />
@@ -49,8 +49,17 @@ export default function TabsLayout() {
           name="profile"
           options={{
             title: "Profil",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person" size={size} color={color} />
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="person" size={32} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="plus"
+          options={{
+            title: "Ajouter",
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="add-circle" size={30} color={color} />
             ),
           }}
         />
@@ -58,8 +67,8 @@ export default function TabsLayout() {
           name="tchat"
           options={{
             title: "Messages",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="chatbubbles" size={size} color={color} />
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="chatbubbles" size={28} color={color} />
             ),
           }}
         />
@@ -67,8 +76,8 @@ export default function TabsLayout() {
           name="settings"
           options={{
             title: "Paramètres",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="settings" size={size} color={color} />
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="settings" size={28} color={color} />
             ),
           }}
         />
