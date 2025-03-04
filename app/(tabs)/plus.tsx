@@ -1,9 +1,9 @@
 import { View, Text } from "react-native";
 
-export default function IndexScreen() {
+export default function PlusScreen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Bienvenue sur la Page d'Accueil !</Text>
+      <Text>Page Plus</Text>
     </View>
   );
 }

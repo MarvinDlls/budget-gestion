@@ -6,7 +6,7 @@ import { Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
 import DismissKeyboard from '../../src/Components/DismissKeyboard';
 import { NavigationProp } from '@react-navigation/native';
 import RegisterForm from '../../src/Components/RegisterForm';
-
+import { useRouter } from "expo-router";
 const Back = require('../../assets/back.png');
 
 type RegisterProps = {
@@ -15,6 +15,7 @@ type RegisterProps = {
 
 
 export default function Register({navigation}: RegisterProps) {
+  const router = useRouter();
 
     let [fontsLoaded] = useFonts({
         Roboto_700Bold,
@@ -32,7 +33,7 @@ export default function Register({navigation}: RegisterProps) {
       >
         
       <View style={styles.container}>
-        <TouchableOpacity style={styles.logo} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.logo} onPress={() => router.back()}>
           <Image source={Back} style={{width: 35, height: 35}} />
         </TouchableOpacity>
         <Text style={styles.title}>Inscription</Text>

@@ -1,13 +1,14 @@
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { supabase } from '../../services/supabase';
+import { useRouter } from 'expo-router'; // Ajout de l'import de useRouter
 
 export default function RegisterForm() {
-
     const [pseudo, setPseudo] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const router = useRouter(); // Utilisation de useRouter comme dans LoginForm
 
     const handleRegister = async () => {
         if (!pseudo || !email || !password || !confirmPassword) {
@@ -39,7 +40,7 @@ export default function RegisterForm() {
         }
     
         try {
-            const { error: authError } = await supabase.auth.signUp({
+            const { data: authData, error: authError } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
@@ -55,7 +56,16 @@ export default function RegisterForm() {
                 return;
             }
     
-            Alert.alert('Succès', 'Inscription réussie !');
+            Alert.alert('Succès', 'Inscription réussie !', [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        // Redirection vers IndexScreen après une inscription réussie
+                        router.navigate("/(tabs)/"); // Même chemin que dans LoginForm
+                    }
+                }
+            ]);
+            
             setPseudo('');
             setEmail('');
             setPassword('');
@@ -95,7 +105,7 @@ export default function RegisterForm() {
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
             />
-            <TouchableOpacity style={styles.button}  onPress={handleRegister}>
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>S'inscrire</Text>
             </TouchableOpacity>
         </View>

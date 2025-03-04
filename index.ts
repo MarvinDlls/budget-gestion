@@ -1,4 +1,3 @@
-
 import "expo-router/entry";
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
