@@ -90,4 +90,4 @@ Ce projet est sous licence MIT. Consultez le fichier [LICENSE](LICENSE) pour plu
 
 ### Auteur
 
-Application développée par [https://github.com/MarvinDlls].
+Application développée par [(https://github.com/MarvinDlls)].
