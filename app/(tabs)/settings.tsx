@@ -3,11 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Dim
 import { useRouter } from "expo-router";
 import { supabase } from '../../services/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import useModal from "../../src/Components/UseModal";
 import ThemeModal from "../modal/ModalPref/Theme";
+import ModalGestion from '../modal/ModalGestion/ModalGestion';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const modalGestion = useModal();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -30,7 +33,7 @@ export default function SettingsScreen() {
     {
       title: "Gestion du budget",
       icon: "wallet-outline",
-      onPress: () => router.navigate("/settings/budget")
+      onPress: modalGestion.open
     },
     {
       title: "Confidentialité et Sécurité",
@@ -60,6 +63,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Modal pour le thème (visible seulement quand on appuie sur "Préférences de l'application") */}
+      <ModalGestion visible={modalGestion.isOpen} setVisible={modalGestion.close} />
       <ThemeModal visible={visible} setVisible={setVisible} />
 
       <View style={styles.footerContainer}>
