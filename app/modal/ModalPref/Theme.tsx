@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Dialog, Portal, Text } from "react-native-paper";
+import { useTheme } from "../../../src/context/ThemeContext";
 
 interface ModalProps {
   visible: boolean;
@@ -8,24 +9,23 @@ interface ModalProps {
 }
 
 export default function ThemeModal({ visible, setVisible }: ModalProps) {
+  const { setTheme } = useTheme(); // Récupération de la fonction setTheme
   const themes = [
-    { name: "Clair", backgroundColor: "#FFFFFF", textColor: "#333333" },
-    { name: "Sombre", backgroundColor: "#121212", textColor: "#FFFFFF" },
-    { name: "Océan", backgroundColor: "#E0F2F1", textColor: "#00695C" },
-    { name: "Pastel", backgroundColor: "#F3E5F5", textColor: "#6A1B9A" },
-    { name: "Néon", backgroundColor: "#0A192F", textColor: "#64FFDA" }
+    { name: 'Par défaut', backgroundColor: '##F5F7FA', textColor: '#333333' },
+    { name: 'Sombre', backgroundColor: '#121212', textColor: '#FFFFFF' },
+    { name: 'Océan', backgroundColor: '#E0F2F1', textColor: '#00695C' },
+    { name: 'Pastel', backgroundColor: '#F3E5F5', textColor: '#6A1B9A' },
+    { name: 'Néon', backgroundColor: '#0A192F', textColor: '#64FFDA' },
   ];
 
   return (
     <Portal>
-      <Dialog 
-        visible={visible} 
+      <Dialog
+        visible={visible}
         onDismiss={() => setVisible(false)}
         style={styles.dialogContainer}
       >
-        {/* View englobant pour éviter le problème d'overflow */}
         <View style={styles.wrapper}>
-          {/* En-tête de la modal */}
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Choisir un thème</Text>
             <TouchableOpacity onPress={() => setVisible(false)} style={styles.closeButton}>
@@ -33,29 +33,28 @@ export default function ThemeModal({ visible, setVisible }: ModalProps) {
             </TouchableOpacity>
           </View>
 
-          {/* Contenu de la modal */}
           <Dialog.Content style={styles.contentContainer}>
             <Text style={styles.description}>
               Personnalisez votre expérience avec un thème qui vous correspond
             </Text>
 
-            <ScrollView 
-              horizontal 
+            <ScrollView
+              horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.themeScrollContainer}
             >
               {themes.map((theme, index) => (
-                <TouchableOpacity 
-                  key={index} 
+                <TouchableOpacity
+                  key={index}
                   style={[
-                    styles.themeOption, 
-                    { 
+                    styles.themeOption,
+                    {
                       backgroundColor: theme.backgroundColor,
-                      borderColor: theme.textColor
-                    }
+                      borderColor: theme.textColor,
+                    },
                   ]}
                   onPress={() => {
-                    // Logique de sélection de thème
+                    setTheme(theme);  // Changement du thème
                     setVisible(false);
                   }}
                 >
