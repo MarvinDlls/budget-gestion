@@ -23,60 +23,64 @@ export default function ThemeModal({ visible, setVisible }: ModalProps) {
         onDismiss={() => setVisible(false)}
         style={styles.dialogContainer}
       >
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>Choisir un thème</Text>
-          <TouchableOpacity onPress={() => setVisible(false)} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>×</Text>
-          </TouchableOpacity>
+        {/* View englobant pour éviter le problème d'overflow */}
+        <View style={styles.wrapper}>
+          {/* En-tête de la modal */}
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Choisir un thème</Text>
+            <TouchableOpacity onPress={() => setVisible(false)} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>×</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Contenu de la modal */}
+          <Dialog.Content style={styles.contentContainer}>
+            <Text style={styles.description}>
+              Personnalisez votre expérience avec un thème qui vous correspond
+            </Text>
+
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.themeScrollContainer}
+            >
+              {themes.map((theme, index) => (
+                <TouchableOpacity 
+                  key={index} 
+                  style={[
+                    styles.themeOption, 
+                    { 
+                      backgroundColor: theme.backgroundColor,
+                      borderColor: theme.textColor
+                    }
+                  ]}
+                  onPress={() => {
+                    // Logique de sélection de thème
+                    setVisible(false);
+                  }}
+                >
+                  <Text style={[styles.themeName, { color: theme.textColor }]}>
+                    {theme.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </Dialog.Content>
         </View>
-        
-        <Dialog.Content style={styles.contentContainer}>
-          <Text style={styles.description}>
-            Personnalisez votre expérience avec un thème qui vous correspond
-          </Text>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.themeScrollContainer}
-          >
-            {themes.map((theme, index) => (
-              <TouchableOpacity 
-                key={index} 
-                style={[
-                  styles.themeOption, 
-                  { 
-                    backgroundColor: theme.backgroundColor,
-                    borderColor: theme.textColor
-                  }
-                ]}
-                onPress={() => {
-                  // Logique de sélection de thème
-                  setVisible(false);
-                }}
-              >
-                <Text style={[styles.themeName, { color: theme.textColor }]}>
-                  {theme.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </Dialog.Content>
       </Dialog>
     </Portal>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    overflow: "visible", // Empêche le problème de shadow
+  },
   dialogContainer: {
     borderRadius: 20,
-    overflow: 'hidden',
     backgroundColor: 'white',
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.30,
     shadowRadius: 4.65,
     elevation: 8,
@@ -128,10 +132,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,

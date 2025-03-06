@@ -3,11 +3,18 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Dim
 import { useRouter } from "expo-router";
 import { supabase } from '../../services/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import useModal from "../../src/Components/UseModal";
 import ThemeModal from "../modal/ModalPref/Theme";
+import ModalGestion from '../modal/ModalGestion/ModalGestion';
+import ModalAccount from '../modal/ModalAccount/ModalAccount';
+import ModalSecurity from '../modal/ModalSecurity/ModalSecurity';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const modalGestion = useModal();
+  const modalAccount = useModal();
+  const modalSecurity = useModal();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -20,7 +27,7 @@ export default function SettingsScreen() {
     {
       title: "Compte",
       icon: "person-circle-outline",
-      onPress: () => router.navigate("/settings/account")
+      onPress: () => modalAccount.open()
     },
     {
       title: "Préférences de l'application",
@@ -30,12 +37,12 @@ export default function SettingsScreen() {
     {
       title: "Gestion du budget",
       icon: "wallet-outline",
-      onPress: () => router.navigate("/settings/budget")
+      onPress: () => modalGestion.open()
     },
     {
       title: "Confidentialité et Sécurité",
       icon: "shield-checkmark-outline",
-      onPress: () => router.navigate("/settings/privacy")
+      onPress: () => modalSecurity.open()
     }
   ];
 
@@ -59,8 +66,10 @@ export default function SettingsScreen() {
         ))}
       </View>
 
-      {/* Modal pour le thème (visible seulement quand on appuie sur "Préférences de l'application") */}
+      <ModalAccount visible={modalAccount.isOpen} setVisible={modalAccount.close} />
       <ThemeModal visible={visible} setVisible={setVisible} />
+      <ModalGestion visible={modalGestion.isOpen} setVisible={modalGestion.close} />
+      <ModalSecurity visible={modalSecurity.isOpen} setVisible={modalSecurity.close} />
 
       <View style={styles.footerContainer}>
         <TouchableOpacity 

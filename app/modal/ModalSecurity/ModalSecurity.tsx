@@ -7,7 +7,7 @@ interface ModalProps {
   setVisible: () => void;  // Fonction pour fermer la modal
 }
 
-export default function ModalGestion({ visible, setVisible }: ModalProps) {
+export default function ModalSecurity({ visible, setVisible }: ModalProps) {
   return (
     <Portal>
       <Dialog
@@ -17,7 +17,7 @@ export default function ModalGestion({ visible, setVisible }: ModalProps) {
       >
         <View style={styles.wrapper}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Gestion du budget</Text>
+            <Text style={styles.modalTitle}>Gestion de sécurité</Text>
             <TouchableOpacity onPress={setVisible} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>×</Text>
             </TouchableOpacity>
