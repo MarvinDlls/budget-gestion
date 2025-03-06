@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { Provider as PaperProvider, DefaultTheme, MD3DarkTheme } from 'react-native-paper';
 
 // Définition des types pour les thèmes
 interface Theme {
@@ -34,9 +35,21 @@ interface ThemeProviderProps {
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
+  // Définition des thèmes pour React Native Paper
+  const paperTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: theme.backgroundColor,
+      text: theme.textColor,
+    },
+  };
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
+      <PaperProvider theme={paperTheme}>
+        {children}
+      </PaperProvider>
     </ThemeContext.Provider>
   );
 };
