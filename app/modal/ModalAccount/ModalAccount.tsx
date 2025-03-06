@@ -1,10 +1,10 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { Dialog, Portal, Text } from "react-native-paper";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Dialog, Portal } from "react-native-paper";
 
 interface ModalProps {
   visible: boolean;
-  setVisible: (value: boolean) => void;
+  setVisible: () => void;  // Fonction pour fermer la modal
 }
 
 export default function ModalAccount({ visible, setVisible }: ModalProps) {
@@ -12,11 +12,22 @@ export default function ModalAccount({ visible, setVisible }: ModalProps) {
     <Portal>
       <Dialog
         visible={visible}
-        onDismiss={() => setVisible(false)}
+        onDismiss={setVisible} // Correction : on appelle directement `setVisible`
         style={styles.dialogContainer}
       >
         <View style={styles.wrapper}>
-            
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Gestion du compte</Text>
+            <TouchableOpacity onPress={setVisible} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>×</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Dialog.Content style={styles.contentContainer}>
+            <Text style={styles.description}>
+              Personnalisez votre expérience avec un thème qui vous correspond.
+            </Text>
+          </Dialog.Content>
         </View>
       </Dialog>
     </Portal>
@@ -25,7 +36,7 @@ export default function ModalAccount({ visible, setVisible }: ModalProps) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    overflow: "visible", // Empêche le problème de shadow
+    overflow: "visible",
   },
   dialogContainer: {
     borderRadius: 20,
@@ -69,27 +80,5 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 20,
     fontSize: 16,
-  },
-  themeScrollContainer: {
-    paddingHorizontal: 10,
-    alignItems: "center",
-  },
-  themeOption: {
-    width: 120,
-    height: 160,
-    borderRadius: 15,
-    marginHorizontal: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-  },
-  themeName: {
-    fontSize: 18,
-    fontWeight: "600",
   },
 });
