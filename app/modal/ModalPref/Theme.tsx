@@ -12,7 +12,7 @@ export default function ThemeModal({ visible, setVisible }: ModalProps) {
   const { setTheme } = useTheme(); // Récupération de la fonction setTheme
   const themes = [
     { name: 'Par défaut', backgroundColor: '##F5F7FA', textColor: '#333333' },
-    { name: 'Sombre', backgroundColor: '#121212', textColor: '#FFFFFF' },
+    { name: 'Sombre', backgroundColor: '#02395e', textColor: '#FFFFFF' },
     { name: 'Océan', backgroundColor: '#E0F2F1', textColor: '#00695C' },
     { name: 'Pastel', backgroundColor: '#F3E5F5', textColor: '#6A1B9A' },
     { name: 'Néon', backgroundColor: '#0A192F', textColor: '#64FFDA' },
