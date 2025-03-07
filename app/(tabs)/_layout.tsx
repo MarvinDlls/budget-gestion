@@ -1,13 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router'; 
+import { useTheme } from "../../src/context/ThemeContext";
 import SideMenu from '../modal/SideMenu';
 
 export default function TabsLayout() {
   const [menuVisible, setMenuVisible] = useState(false);
   const router = useRouter();
+  const { theme } = useTheme();
 
   const openMenu = () => {
     setMenuVisible(true);
@@ -79,6 +81,8 @@ export default function TabsLayout() {
             tabBarIcon: ({ color }) => (
               <Ionicons name="settings" size={28} color={color} />
             ),
+            tabBarStyle: { backgroundColor: theme.backgroundColor },
+            tabBarLabelStyle: { color: theme.textColor },
           }}
         />
       </Tabs>
