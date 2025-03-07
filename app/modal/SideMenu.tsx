@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Tabs, useRouter } from 'expo-router';
-import { supabase } from '../../services/supabase';
-import useModal from "../../src/Components/UseModal";
-import EtesVousSur from '../../src/Components/EtesVousSur';
+import { useRouter } from 'expo-router';
 
 interface SideMenuProps {
   visible: boolean;
