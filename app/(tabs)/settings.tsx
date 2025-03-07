@@ -9,6 +9,7 @@ import ThemeModal from "../modal/ModalPref/Theme";
 import ModalGestion from '../modal/ModalGestion/ModalGestion';
 import ModalAccount from '../modal/ModalAccount/ModalAccount';
 import ModalSecurity from '../modal/ModalSecurity/ModalSecurity';
+import EtesVousSur from "../../src/Components/EtesVousSur";
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -17,8 +18,15 @@ export default function SettingsScreen() {
   const modalGestion = useModal();
   const modalAccount = useModal();
   const modalSecurity = useModal();
+  const modalSur = useModal();
+
+  // Modifié pour afficher d'abord la modal de confirmation
+  const handleLogoutClick = () => {
+    modalSur.open();
+  };
 
   const handleLogout = async () => {
+    modalSur.close(); // Ferme la modal de confirmation
     await supabase.auth.signOut();
     router.navigate("/Home");
   };
@@ -69,6 +77,11 @@ export default function SettingsScreen() {
         ))}
       </View>
 
+      <EtesVousSur 
+        visible={modalSur.isOpen} 
+        setVisible={modalSur.close}
+        onConfirm={handleLogout}
+      />
       <ModalAccount visible={modalAccount.isOpen} setVisible={modalAccount.close} />
       <ThemeModal visible={visible} setVisible={setVisible} />
       <ModalGestion visible={modalGestion.isOpen} setVisible={modalGestion.close} />
@@ -77,7 +90,7 @@ export default function SettingsScreen() {
       <View style={styles.footerContainer}>
         <TouchableOpacity 
           style={styles.logoutButton} 
-          onPress={handleLogout}
+          onPress={handleLogoutClick} 
         >
           <Ionicons name="log-out-outline" size={20} color="#FF3B30" />
           <Text style={styles.logoutText}>Déconnexion</Text>
