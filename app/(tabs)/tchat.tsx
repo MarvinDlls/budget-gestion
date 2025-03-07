@@ -5,7 +5,7 @@ export default function TchatScreen() {
   const { theme } = useTheme();
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text>Page Message</Text>
+      <Text style={{ color: theme.textColor }}>Page Message</Text>
     </View>
   );
 }
