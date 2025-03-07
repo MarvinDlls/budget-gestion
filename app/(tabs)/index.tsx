@@ -5,7 +5,7 @@ export default function IndexScreen() {
   const { theme } = useTheme();
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text>Bienvenue sur la Page d'Accueil</Text>
+      <Text style={{ color: theme.textColor }}>Bienvenue sur la Page d'Accueil</Text>
     </View>
   );
 }
