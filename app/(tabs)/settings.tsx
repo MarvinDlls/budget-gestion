@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Dim
 import { useRouter } from "expo-router";
 import { supabase } from '../../services/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from "../../src/context/ThemeContext";
 import useModal from "../../src/Components/UseModal";
 import ThemeModal from "../modal/ModalPref/Theme";
 import ModalGestion from '../modal/ModalGestion/ModalGestion';
@@ -12,6 +13,7 @@ import ModalSecurity from '../modal/ModalSecurity/ModalSecurity';
 export default function SettingsScreen() {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const { theme } = useTheme();
   const modalGestion = useModal();
   const modalAccount = useModal();
   const modalSecurity = useModal();
@@ -48,6 +50,7 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
       <View style={styles.contentContainer}>
         {settingsSections.map((section, index) => (
           <TouchableOpacity
@@ -79,6 +82,7 @@ export default function SettingsScreen() {
           <Ionicons name="log-out-outline" size={20} color="#FF3B30" />
           <Text style={styles.logoutText}>Déconnexion</Text>
         </TouchableOpacity>
+      </View>
       </View>
     </SafeAreaView>
   );
