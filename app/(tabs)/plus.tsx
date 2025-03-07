@@ -5,7 +5,7 @@ export default function PlusScreen() {
   const { theme } = useTheme();
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text>Page Plus</Text>
+      <Text style={{ color: theme.textColor }}>Page Plus</Text>
     </View>
   );
 }
