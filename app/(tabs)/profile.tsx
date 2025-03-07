@@ -3,9 +3,10 @@ import { useTheme } from "../../src/context/ThemeContext";
 
 export default function ProfileScreen() {
   const { theme } = useTheme();
+
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text>Page Profil</Text>
+      <Text style={{ color: theme.textColor }}>Page Profil</Text>
     </View>
   );
 }
