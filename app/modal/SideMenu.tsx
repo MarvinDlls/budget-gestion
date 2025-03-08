@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { supabase } from '../../services/supabase';
 
 interface SideMenuProps {
   visible: boolean;
@@ -12,8 +13,34 @@ interface SideMenuProps {
 export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMenuProps) {
   const router = useRouter();
   const [animation] = useState(new Animated.Value(-300));
+  const [username, setUsername] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
 
-  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        console.error("Erreur lors de la récupération de l'utilisateur : ", error);
+        return;
+      }
+
+      const { data, error: userError } = await supabase
+        .from("users")
+        .select("pseudo, email")
+        .eq("id", user.id)
+        .single();
+      
+        if (userError) {
+          console.error("Erreur lors de la récupération des infos utilisateur : ", userError);
+          console.log("ID utilisateur recherché :", user.id);
+        } else {
+          setUsername(data?.pseudo);
+          setEmail(data?.email);
+        }
+    };
+    fetchUserData();
+  }, []);
+
   React.useEffect(() => {
     Animated.timing(animation, {
       toValue: visible ? 0 : -300,
@@ -37,7 +64,6 @@ export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMen
 
   return (
     <>
-      {/* SideMenu Modal */}
       <Modal
         visible={visible}
         transparent={true}
@@ -69,8 +95,8 @@ export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMen
                 <View style={styles.userAvatar}>
                   <Ionicons name="person" size={40} color="#FFF" />
                 </View>
-                <Text style={styles.userName}>Utilisateur</Text>
-                <Text style={styles.userEmail}>utilisateur@example.com</Text>
+                <Text style={styles.userName}>{username || "Chargement..."}</Text>
+                <Text style={styles.userEmail}>{email || "chargement..."}</Text>
               </View>
               
               <View style={styles.menuItems}>
@@ -86,13 +112,12 @@ export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMen
                 ))}
               </View>
             </SafeAreaView>
-            
           </Animated.View>
         </View>
       </Modal>
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   modalOverlay: {
