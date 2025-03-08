@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Animated } from 'react-native';
+import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../services/supabase';
@@ -10,7 +10,7 @@ interface SideMenuProps {
   onMenuItemPress: (route: string) => void;
 }
 
-export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMenuProps) {
+export default function SideMenu({ visible, onClose, onMenuItemPress }: SideMenuProps) {
   const router = useRouter();
   const [animation] = useState(new Animated.Value(-300));
   const [username, setUsername] = useState<string | null>(null);
@@ -18,28 +18,33 @@ export default function SideMenu ({ visible, onClose, onMenuItemPress }: SideMen
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error || !user) {
-        console.error("Erreur lors de la récupération de l'utilisateur : ", error);
-        return;
-      }
-
-      const { data, error: userError } = await supabase
-        .from("users")
-        .select("pseudo, email")
-        .eq("id", user.id)
-        .single();
-      
-        if (userError) {
-          console.error("Erreur lors de la récupération des infos utilisateur : ", userError);
-          console.log("ID utilisateur recherché :", user.id);
-        } else {
-          setUsername(data?.pseudo);
-          setEmail(data?.email);
+      try {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (authError || !user) {
+          console.error("Erreur lors de la récupération de l'utilisateur : ", authError);
+          return;
         }
+        
+        setEmail(user.email ?? null);
+        
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        
+        if (userError) {
+          console.error("Erreur lors de la récupération des données utilisateur:", userError);
+        } else if (userData.user) {
+          const metadata = userData.user.user_metadata;
+          setUsername(metadata?.username || metadata?.full_name || "Utilisateur");
+        }
+      } catch (error) {
+        console.error("Erreur générale:", error);
+      }
     };
-    fetchUserData();
-  }, []);
+    
+    if (visible) {
+      fetchUserData();
+    }
+  }, [visible]);
 
   React.useEffect(() => {
     Animated.timing(animation, {
