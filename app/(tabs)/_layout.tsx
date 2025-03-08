@@ -81,8 +81,8 @@ export default function TabsLayout() {
             tabBarIcon: ({ color }) => (
               <Ionicons name="settings" size={28} color={color} />
             ),
-            tabBarStyle: { backgroundColor: theme.backgroundColor },
-            tabBarLabelStyle: { color: theme.textColor },
+            // tabBarStyle: { backgroundColor: theme.backgroundColor },
+            // tabBarLabelStyle: { color: theme.textColor },
           }}
         />
       </Tabs>
