@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { supabase } from '../../services/supabase';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,13 +20,12 @@ export default function SettingsScreen() {
   const modalSecurity = useModal();
   const modalSur = useModal();
 
-  // Modifié pour afficher d'abord la modal de confirmation
   const handleLogoutClick = () => {
     modalSur.open();
   };
 
   const handleLogout = async () => {
-    modalSur.close(); // Ferme la modal de confirmation
+    modalSur.close(); 
     await supabase.auth.signOut();
     router.navigate("/Home");
   };
@@ -42,7 +41,7 @@ export default function SettingsScreen() {
     {
       title: "Préférences de l'application",
       icon: "options-outline",
-      onPress: () => setVisible(true) // Ouvre la modal du thème
+      onPress: () => setVisible(true) 
     },
     {
       title: "Gestion du budget",
@@ -102,12 +101,11 @@ export default function SettingsScreen() {
 }
 
 const { height } = Dimensions.get('window');
-const contentHeight = height * 0.6; // 60% de la hauteur de l'écran
+const contentHeight = height * 0.6; 
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
     justifyContent: 'space-between'
   },
   header: {
