@@ -1,84 +1,244 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Dialog, Portal } from "react-native-paper";
+import React, { useEffect, useState } from 'react';
+import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, Animated, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { supabase } from '../../../services/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface ModalProps {
+interface SideMenuProps {
   visible: boolean;
-  setVisible: () => void;  // Fonction pour fermer la modal
+  onClose: () => void;
+  onMenuItemPress: (route: string) => void;
 }
 
-export default function ModalAccount({ visible, setVisible }: ModalProps) {
-  return (
-    <Portal>
-      <Dialog
-        visible={visible}
-        onDismiss={setVisible} // Correction : on appelle directement `setVisible`
-        style={styles.dialogContainer}
-      >
-        <View style={styles.wrapper}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Gestion du compte</Text>
-            <TouchableOpacity onPress={setVisible} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>×</Text>
-            </TouchableOpacity>
-          </View>
+export default function SideMenu({ visible, onClose, onMenuItemPress }: SideMenuProps) {
+  const router = useRouter();
+  const [animation] = useState(new Animated.Value(-300));
+  const [username, setUsername] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const updateAvatar = async (newUrl: string) => {
+    try {
+      await AsyncStorage.setItem('userAvatar', newUrl);
+      
+      setAvatarUrl(newUrl);
+      
+      // Éventuellement, mettre à jour les métadonnées utilisateur dans Supabase
+      // const { error } = await supabase.auth.updateUser({
+      //   data: { avatar_url: newUrl }
+      // });
+      // if (error) console.error("Erreur lors de la mise à jour des métadonnées:", error);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'avatar:", error);
+    }
+  };
 
-          <Dialog.Content style={styles.contentContainer}>
-            <Text style={styles.description}>
-              Personnalisez votre expérience avec un thème qui vous correspond.
-            </Text>
-          </Dialog.Content>
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Récupérer l'avatar depuis AsyncStorage
+        const storedAvatar = await AsyncStorage.getItem('userAvatar');
+        if (storedAvatar) {
+          setAvatarUrl(storedAvatar);
+        }
+
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (authError || !user) {
+          console.error("Erreur lors de la récupération de l'utilisateur : ", authError);
+          return;
+        }
+        
+        setEmail(user.email ?? null);
+        
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        
+        if (userError) {
+          console.error("Erreur lors de la récupération des données utilisateur:", userError);
+        } else if (userData.user) {
+          const metadata = userData.user.user_metadata;
+          setUsername(metadata?.username || metadata?.full_name || "Utilisateur");
+          
+          // Si vous stockez l'avatar dans les métadonnées utilisateur, vous pouvez le récupérer ici
+          if (metadata?.avatar_url && !storedAvatar) {
+            setAvatarUrl(metadata.avatar_url);
+          }
+        }
+      } catch (error) {
+        console.error("Erreur générale:", error);
+      }
+    };
+    
+    if (visible) {
+      fetchUserData();
+    }
+  }, [visible]);
+
+  React.useEffect(() => {
+    Animated.timing(animation, {
+      toValue: visible ? 0 : -300,
+      duration: 300,
+      useNativeDriver: true
+    }).start();
+  }, [visible]);
+
+  const menuItems: { title: string; icon: 'heart' | 'mail' | 'time' | 'person-circle' | 'help-circle'; route: string }[] = [
+    { title: 'Mes Favoris', icon: 'heart', route: '/favorites' },
+    { title: 'Messages', icon: 'mail', route: '/messages' },
+    { title: 'Historique', icon: 'time', route: '/history' },
+    { title: 'Mon Compte', icon: 'person-circle', route: '/account' },
+    { title: 'Aide', icon: 'help-circle', route: '/help' },
+  ];
+
+  const handleMenuItemPress = (route: string) => {
+    onClose();
+    onMenuItemPress(route);
+  };
+
+  return (
+    <>
+      <Modal
+        visible={visible}
+        transparent={true}
+        animationType="none"
+        onRequestClose={onClose}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity 
+            style={styles.closeArea} 
+            activeOpacity={1} 
+            onPress={onClose}
+          />
+          
+          <Animated.View 
+            style={[
+              styles.menuContainer,
+              { transform: [{ translateX: animation }] }
+            ]}
+          >
+            <SafeAreaView style={styles.safeArea}>
+              <View style={styles.menuHeader}>
+                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                  <Ionicons name="close" size={28} color="#333" />
+                </TouchableOpacity>
+                <Text style={styles.menuTitle}>Menu</Text>
+              </View>
+              
+              <View style={styles.userSection}>
+                <View style={styles.userAvatar}>
+                  {avatarUrl ? (
+                    <Image 
+                      source={{ uri: avatarUrl }} 
+                      style={styles.avatarImage}
+                    />
+                  ) : (
+                    <Ionicons name="person" size={40} color="#FFF" />
+                  )}
+                </View>
+                <Text style={styles.userName}>{username || "Chargement..."}</Text>
+                <Text style={styles.userEmail}>{email || "chargement..."}</Text>
+              </View>
+              
+              <View style={styles.menuItems}>
+                {menuItems.map((item, index) => (
+                  <TouchableOpacity 
+                    key={index} 
+                    style={styles.menuItem}
+                    onPress={() => handleMenuItemPress(item.route)}
+                  >
+                    <Ionicons name={item.icon} size={24} color="#333" />
+                    <Text style={styles.menuItemText}>{item.title}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </SafeAreaView>
+          </Animated.View>
         </View>
-      </Dialog>
-    </Portal>
+      </Modal>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    overflow: "visible",
+  modalOverlay: {
+    flex: 1,
+    flexDirection: 'row',
   },
-  dialogContainer: {
-    borderRadius: 20,
-    backgroundColor: "white",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
+  closeArea: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  menuContainer: {
+    width: 280,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 0 },
     shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
+    shadowRadius: 5,
+    elevation: 10,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
   },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#F7F7F7",
+  safeArea: {
+    flex: 1,
   },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#333",
+  menuHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EFEFEF',
   },
   closeButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#E0E0E0",
-    justifyContent: "center",
-    alignItems: "center",
+    marginRight: 15,
   },
-  closeButtonText: {
-    fontSize: 24,
-    color: "#666",
-    fontWeight: "300",
+  menuTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
-  contentContainer: {
-    paddingVertical: 20,
+  userSection: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#F7F7F7',
   },
-  description: {
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 20,
+  userAvatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#a18cd1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    overflow: 'hidden', // Pour s'assurer que l'image reste dans le cercle
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 35,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  userEmail: {
+    fontSize: 14,
+    color: '#666',
+  },
+  menuItems: {
+    marginTop: 15,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EFEFEF',
+  },
+  menuItemText: {
     fontSize: 16,
-  },
+    marginLeft: 15,
+  }
 });
