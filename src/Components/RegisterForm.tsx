@@ -1,76 +1,72 @@
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { supabase } from '../../services/supabase';
-import { useRouter } from 'expo-router'; // Ajout de l'import de useRouter
+import { useRouter } from 'expo-router';
 
 export default function RegisterForm() {
     const [pseudo, setPseudo] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const router = useRouter(); // Utilisation de useRouter comme dans LoginForm
+    const router = useRouter();
 
     const handleRegister = async () => {
         if (!pseudo || !email || !password || !confirmPassword) {
             Alert.alert('Attention!', 'Tous les champs doivent être remplis.');
             return;
         }
-    
+
         const pseudoRegex = /^[a-zA-Z0-9_-]{3,16}$/;
         if (!pseudoRegex.test(pseudo)) {
             Alert.alert('Erreur', 'Le pseudo doit comporter entre 3 et 16 caractères et contenir uniquement des lettres, des chiffres, des tirets ou des underscores.');
             return;
         }
-    
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             Alert.alert('Erreur', 'L\'email n\'est pas valide.');
             return;
         }
-    
+
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!passwordRegex.test(password)) {
             Alert.alert('Erreur', 'Le mot de passe doit comporter au moins 8 caractères, inclure une majuscule, une minuscule, un chiffre et un caractère spécial.');
             return;
         }
-    
+
         if (password !== confirmPassword) {
             Alert.alert('Erreur', 'Les mots de passe ne correspondent pas.');
             return;
         }
-    
+
         try {
-            const { data: authData, error: authError } = await supabase.auth.signUp({
+            const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
                     data: {
-                        full_name: pseudo,
-                        username: pseudo
+                        username: pseudo, 
+                        full_name: pseudo
                     }
                 }
             });
-    
-            if (authError) {
-                Alert.alert('Erreur', authError.message);
+
+            if (error) {
+                Alert.alert('Erreur', error.message);
                 return;
             }
-    
-            Alert.alert('Succès', 'Inscription réussie !', [
-                {
-                    text: 'OK',
-                    onPress: () => {
-                        // Redirection vers IndexScreen après une inscription réussie
-                        router.navigate("/(tabs)/"); // Même chemin que dans LoginForm
-                    }
-                }
-            ]);
-            
+
+            Alert.alert(
+                'Succès',
+                'Inscription réussie ! Vérifiez votre e-mail pour confirmer votre compte.',
+                [{ text: 'OK', onPress: () => router.navigate("/(tabs)/") }]
+            );
+
             setPseudo('');
             setEmail('');
             setPassword('');
             setConfirmPassword('');
-    
+
         } catch (error) {
             Alert.alert('Erreur', 'Un problème est survenu, veuillez réessayer.');
         }
