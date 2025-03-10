@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Alert } from "react-native";
 import { Dialog, Portal } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../services/supabase";
-import * as FileSystem from "expo-file-system";
 
 interface ModalProps {
   visible: boolean;
@@ -36,91 +35,89 @@ export default function ModalPhoto({ visible, setVisible, avatarUrl, updateAvata
   const uploadImage = async (uri: string) => {
     try {
       setUploading(true);
-      
-      // Vérifier que l'utilisateur est connecté
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Utilisateur non connecté");
-      
-      // Créer un nom de fichier unique basé sur l'ID utilisateur
-      const fileExt = uri.split('.').pop();
+
+      // Vérifier l'extension du fichier
+      const fileExt = uri.split('.').pop()?.toLowerCase() || "jpg"; // Par défaut, jpg
       const fileName = `avatar-${user.id}-${Date.now()}.${fileExt}`;
       const filePath = `avatars/${fileName}`;
-      
-      // Convertir l'URI en base64 pour le téléchargement
-      const fileBase64 = await FileSystem.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
+
+      // Convertir l'image en base64
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
       });
-      
-      // Télécharger l'image vers Supabase Storage
+
+      // Supprimer l'ancienne image pour éviter l'accumulation
+      if (avatarUrl) {
+        const oldFilePath = avatarUrl.split('/').pop();
+        await supabase.storage.from('avatars').remove([`avatars/${oldFilePath}`]);
+      }
+
+      // Upload l'image sur Supabase
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, decode(fileBase64), {
-          contentType: `image/${fileExt}`,
-          upsert: true
-        });
-      
+        .upload(filePath, base64, { contentType: `image/${fileExt}`, upsert: true });
+
       if (uploadError) throw uploadError;
-      
-      // Obtenir l'URL publique de l'image
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-      
+
+      // Obtenir l'URL publique
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
       const publicUrl = data.publicUrl;
-      
-      // Mettre à jour le profil utilisateur avec la nouvelle URL
+
+      // Mettre à jour l'avatar dans la base de données
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ avatar_url: publicUrl })
         .eq('id', user.id);
-      
+
       if (updateError) throw updateError;
-      
-      // Mettre à jour l'avatar dans l'interface
+
+      // Mettre à jour l'affichage
       updateAvatar(publicUrl);
-      
+      setPreview(publicUrl);
+      setVisible(false); // Ferme automatiquement le modal après succès
+
     } catch (error) {
-      console.error("Erreur lors du téléchargement:", error);
-      alert("Erreur lors du téléchargement de l'image");
+      console.error("Erreur lors de l'upload:", error);
+      Alert.alert("Erreur", "Impossible d'envoyer l'image");
     } finally {
       setUploading(false);
     }
   };
 
-  // Fonction helper pour décoder le base64
-  function decode(str: string): Uint8Array {
-    const binString = atob(str);
-    const bytes = new Uint8Array(binString.length);
-    for (let i = 0; i < binString.length; i++) {
-      bytes[i] = binString.charCodeAt(i);
-    }
-    return bytes;
-  }
+  useEffect(() => {
+    console.log("Avatar récupéré:", avatarUrl);
+  }, [avatarUrl]);
 
   // Réinitialiser l'image
   const resetImage = async () => {
     try {
       setUploading(true);
-      
-      // Vérifier que l'utilisateur est connecté
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Utilisateur non connecté");
-      
+
       // Mettre à jour le profil avec une URL vide
       const { error } = await supabase
         .from('profiles')
         .update({ avatar_url: null })
         .eq('id', user.id);
-      
+
       if (error) throw error;
-      
-      // Réinitialiser l'avatar dans l'interface
+
       setPreview(null);
       updateAvatar("");
-      
+
     } catch (error) {
       console.error("Erreur lors de la réinitialisation:", error);
-      alert("Erreur lors de la réinitialisation de l'image");
+      Alert.alert("Erreur", "Impossible de réinitialiser l'image");
     } finally {
       setUploading(false);
     }
@@ -128,11 +125,7 @@ export default function ModalPhoto({ visible, setVisible, avatarUrl, updateAvata
 
   return (
     <Portal>
-      <Dialog
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        style={styles.dialogContainer}
-      >
+      <Dialog visible={visible} onDismiss={() => setVisible(false)} style={styles.dialogContainer}>
         <View style={styles.wrapper}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Sélectionner une image</Text>
@@ -148,29 +141,20 @@ export default function ModalPhoto({ visible, setVisible, avatarUrl, updateAvata
                   <ActivityIndicator size="large" color="#6a11cb" />
                 </View>
               ) : null}
-              
-              <Image 
-                source={{ uri: preview || avatarUrl || undefined }} 
+
+              <Image
+                source={{ uri: preview || avatarUrl || Image.resolveAssetSource(require('../../../assets/default.png')).uri }}
                 style={styles.avatar}
-                defaultSource={require('../../../assets/default.png')} // Ajoutez une image par défaut dans vos assets
               />
             </View>
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity 
-                style={styles.button} 
-                onPress={pickImage}
-                disabled={uploading}
-              >
+              <TouchableOpacity style={styles.button} onPress={pickImage} disabled={uploading}>
                 <Ionicons name="images-outline" size={22} color="#FFF" style={styles.buttonIcon} />
                 <Text style={styles.buttonText}>Galerie</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.button, styles.resetButton]} 
-                onPress={resetImage}
-                disabled={uploading}
-              >
+              <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={resetImage} disabled={uploading}>
                 <Ionicons name="refresh-outline" size={22} color="#FFF" style={styles.buttonIcon} />
                 <Text style={styles.buttonText}>Réinitialiser</Text>
               </TouchableOpacity>
