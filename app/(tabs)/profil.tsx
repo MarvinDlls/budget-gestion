@@ -12,22 +12,35 @@ export default function ProfilScreen() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Récupérer l'avatar de l'utilisateur connecté
+  // Fonction pour récupérer l'avatar de l'utilisateur connecté
   useEffect(() => {
     const fetchAvatar = async () => {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
 
-      if (user) {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("avatar_url")
-          .eq("id", user.id)
-          .single();
+      // Récupérer l'utilisateur connecté
+      const { data: user, error: userError } = await supabase.auth.getUser();
 
-        if (error) console.error("Erreur de récupération:", error);
-        else setAvatarUrl(data?.avatar_url || null);
+      if (userError || !user?.user) {
+        console.error("Erreur de récupération de l'utilisateur :", userError);
+        setLoading(false);
+        return;
       }
+
+      const userId = user.user.id; // ID de l'utilisateur connecté
+
+      // Récupérer l'avatar depuis Supabase
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("avatar_url") // Récupère seulement la colonne avatar_url
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Erreur de récupération de l'avatar :", error);
+      } else if (data) {
+        setAvatarUrl(data.avatar_url); // Met à jour l'avatar
+      }
+
       setLoading(false);
     };
 
@@ -43,10 +56,10 @@ export default function ProfilScreen() {
           ) : avatarUrl ? (
             <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
           ) : (
-            <Ionicons name="person" size={50} color="#FFF" />
+            <Image source={require('../../assets/default.png')} style={styles.avatarImage} />
           )}
         </View>
-        
+
         <TouchableOpacity style={styles.button} onPress={modalPhoto.open}>
           <View style={styles.edit}>
             <Ionicons name="create-outline" size={20} color="#FFF" />
