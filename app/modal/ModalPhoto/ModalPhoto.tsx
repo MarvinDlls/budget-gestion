@@ -152,7 +152,7 @@ export default function ModalPhoto({ visible, setVisible, avatarUrl, updateAvata
               <Image 
                 source={{ uri: preview || avatarUrl || undefined }} 
                 style={styles.avatar}
-                defaultSource={require('../../../assets/logoApp.png')} // Ajoutez une image par défaut dans vos assets
+                defaultSource={require('../../../assets/default.png')} // Ajoutez une image par défaut dans vos assets
               />
             </View>
 
