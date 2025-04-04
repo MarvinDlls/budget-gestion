@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Roboto_700Bold, useFonts } from "@expo-google-fonts/roboto";
 import { useRouter } from "expo-router"; // Remplacé NavigationProp par useRouter
-import Colors from "../src/Components/Colors";
+import Colors from "../../src/Components/Colors";
 
-const registerLogo = require("../assets/registerLogo.png");
-const loginLogo = require("../assets/loginLogo.png");
-const logoApp = require("../assets/logoApp.png");
+const registerLogo = require("../../assets/registerLogo.png");
+const loginLogo = require("../../assets/loginLogo.png");
+const logoApp = require("../../assets/logoApp.png");
 
 function HomeScreen() {
   // Utiliser useRouter au lieu de recevoir navigation en props

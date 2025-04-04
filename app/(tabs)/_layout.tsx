@@ -48,11 +48,11 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="amis"
           options={{
-            title: "Profil",
+            title: "Amis",
             tabBarIcon: ({ color }) => (
-              <Ionicons name="person" size={32} color={color} />
+              <Ionicons name="people" size={32} color={color} />
             ),
           }}
         />
@@ -75,6 +75,15 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
+          name="profil"
+          options={{
+            title: "Profil",
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="person" size={28} color={color} />
+            ),
+          }}
+        />
+        {/* <Tabs.Screen
           name="settings"
           options={{
             title: "Paramètres",
@@ -84,7 +93,7 @@ export default function TabsLayout() {
             // tabBarStyle: { backgroundColor: theme.backgroundColor },
             // tabBarLabelStyle: { color: theme.textColor },
           }}
-        />
+        /> */}
       </Tabs>
     </>
   );
