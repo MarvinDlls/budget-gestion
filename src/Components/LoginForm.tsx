@@ -1,13 +1,13 @@
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { supabase } from '../../services/supabase';
-import { useNavigation } from '@react-navigation/native'; // Importation de useNavigation
+import { useRouter } from 'expo-router'; // Remplacé useNavigation par useRouter
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation(); // Initialisation de la navigation
-
+    const router = useRouter(); // Utilisation de useRouter au lieu de useNavigation
+    
     const handleLogin = async () => {
         if (!email || !password) {
             Alert.alert('Attention!', 'Tous les champs doivent être remplis.');
@@ -25,8 +25,8 @@ export default function LoginForm() {
                 return;
             }
 
-            // Redirige vers HomeScreen après une connexion réussie
-            navigation.navigate('HomeScreen'); // Nom du screen dans le StackNavigator
+            // Redirige vers IndexScreen après une connexion réussie
+            router.navigate("/(tabs)/"); // Ajustez le chemin selon votre structure de fichiers
     
         } catch (error) {
             Alert.alert('Erreur', 'Un problème est survenu, veuillez réessayer.');

@@ -1,23 +1,21 @@
+import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { NavigationProp } from "@react-navigation/native";
-import DismissKeyboard from "../Components/DismissKeyboard";
+import { useRouter } from "expo-router"; // Importer useRouter
+import DismissKeyboard from "../../src/Components/DismissKeyboard";
 import { LinearGradient } from "expo-linear-gradient";
-import LoginForm from "../Components/LoginForm";
-import Colors from '../Components/Colors';
+import Colors from "../../src/Components/Colors";
 import { Roboto_700Bold, useFonts } from "@expo-google-fonts/roboto";
+import LoginForm from '../../src/Components/LoginForm';
 
-const Back = require('../../assets/back.png');
+const Back = require("../../assets/back.png");
 
-type LoginProps = {
-  navigation: NavigationProp<any>;
-};
-
-export default function Login({ navigation }: LoginProps) {
+export default function Login() {
+  const router = useRouter(); // Utilisez useRouter au lieu de recevoir navigation comme prop
   
   let [fontsLoaded] = useFonts({
     Roboto_700Bold,
   });
-  
+
   if (!fontsLoaded) {
     return null;
   }
@@ -29,9 +27,8 @@ export default function Login({ navigation }: LoginProps) {
         style={styles.container}
       >
         <View style={styles.container}>
-          {/* Remplace goBack par navigate pour rediriger vers HomeScreen */}
-          <TouchableOpacity style={styles.logo} onPress={() => navigation.navigate('Home')}>
-            <Image source={Back} style={{ width: 35, height: 35 }} />
+          <TouchableOpacity style={styles.logo} onPress={() => router.back()}>
+            <Image source={Back} style={{width: 35, height: 35}} />
           </TouchableOpacity>
           <Text style={styles.title}>Connexion</Text>
           <LoginForm />
@@ -44,20 +41,20 @@ export default function Login({ navigation }: LoginProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   title: {
     fontSize: 40,
-    fontFamily: 'Roboto_700Bold',
-    color: '#000',
-    top: 5
+    fontFamily: "Roboto_700Bold",
+    color: "#000",
+    top: 5,
   },
   logo: {
-    position: 'absolute',
+    position: "absolute",
     top: 50,
     left: 25,
-    zIndex: 1
-  }
+    zIndex: 1,
+  },
 });
